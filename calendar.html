@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Calendar</title>
+    <!-- Bootstrap CSS -->
+    <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css' rel='stylesheet' />
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css' rel='stylesheet' />
+
+    <style>
+        /* Header Section */
+        .header-section {
+            background: linear-gradient(135deg, #004c8c, #2c6eb2);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        /* Calendar Styling */
+        #calendar {
+            background-color: #f7f9fc;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .fc-event {
+            border-radius: 5px;
+            background-color: #006f6a !important;
+            color: white;
+        }
+
+        .fc-event:hover {
+            background-color: #005147 !important;
+        }
+
+        /* Footer Section */
+        .footer-links {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .btn-custom {
+            background-color: #006f6a;
+            color: white;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .btn-custom:hover {
+            background-color: #005147;
+        }
+    </style>
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js'></script>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="header-section">
+        <h1>Event Calendar</h1>
+        <p>See all upcoming events at a glance.</p>
+    </div>
+
+    <!-- Calendar Section -->
+    <div class="container">
+        <div id='calendar'></div>
+    </div>
+
+    <!-- Footer Links -->
+    <div class="footer-links">
+        <p>
+            <a class="btn btn-custom" href="{{ url_for('main.index') }}">Home Page</a>
+        </p>
+    </div>
+
+    <!-- Optional Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#calendar').fullCalendar({
+                events: function(start, end, timezone, callback) {
+                    $.ajax({
+                        url: '/get_events',  // URL to fetch events from Flask
+                        dataType: 'json',
+                        success: function(data) {
+                            var events = data.map(function(event) {
+                                return {
+                                    title: event.title,
+                                    start: event.start,  // Ensure start is in a compatible format
+                                    description: event.description  // Include description if needed
+                                };
+                            });
+                            callback(events);  // Return events to FullCalendar
+                        }
+                    });
+                },
+                eventClick: function(event) {
+                    // Show event description in an alert
+                    alert('Event: ' + event.title + '\nDescription: ' + event.description);
+                },
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                editable: true,
+                droppable: true  // Allow dragging events
+            });
+        });
+        </script>
+        
+         
+</body>
+</html>

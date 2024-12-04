@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* Header Styling */
+        .header {
+            background: linear-gradient(135deg, #006f6a, #2c6eb2);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        /* Card Styling */
+        .card {
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            background-color: #006f6a;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        /* Table Styling */
+        .table {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .table th, .table td {
+            vertical-align: middle;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #f7f7f7;
+        }
+
+        .table thead {
+            background-color: #006f6a;
+            color: white;
+        }
+
+        .table-bordered th, .table-bordered td {
+            border: 1px solid #ddd;
+        }
+
+        /* Button Styling */
+        .btn-custom {
+            background-color: #006f6a;
+            color: white;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .btn-custom:hover {
+            background-color: #005147;
+        }
+
+        /* Footer Section */
+        .footer-links {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <div class="header">
+        <h1>Admin Dashboard</h1>
+        <p>Manage all users, events, and messages from here</p>
+    </div>
+
+    <div class="container mt-4">
+        <!-- Users Table -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>All Users</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.role }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Events Table -->
+        <div class="card">
+            <div class="card-header">
+                <h4>All Events</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Date</th>
+                            <th>Creator</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for event in events %}
+                        <tr>
+                            <td>{{ event.id }}</td>
+                            <td>{{ event.title }}</td>
+                            <td>{{ event.description }}</td>
+                            <td>{{ event.date.strftime('%Y-%m-%d %H:%M') if event.date else 'Not available' }}</td>
+                            <td>{{ event.user.username }}</td>
+                        </tr>
+                    
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Message Table -->
+        <div class="card">
+            <div class="card-header">
+                <h4>Messages from Faculty</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Sender ID</th>
+                            <th>Content</th>
+                            <th>Date</th>
+                           
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for message in messages %}
+                        <tr>
+                            <td>{{ message.id }}</td>
+                            <td>{{ message.sender_id }}</td>
+                            <td>{{ message.content }}</td>
+                            <td>{{ message.date.strftime('%Y-%m-%d %H:%M') if message.date else 'Not available' }}</td>
+  
+
+                            
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Footer Links -->
+        <div class="footer-links">
+            <p>
+                <a class="btn btn-custom" href="{{ url_for('main.index') }}">Home Page</a>
+                <a class="btn btn-custom" href="{{ url_for('main.view_events') }}">View Events</a>
+                <a class="btn btn-custom" href="{{ url_for('main.create_event') }}">Create Events</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Optional Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

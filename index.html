@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Event Management</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <!-- FullCalendar CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
+    <style>
+        /* Header with deep blue gradient */
+        .header-section {
+            background: linear-gradient(135deg, #004c8c, #2c6eb2); 
+            color: white;
+            padding: 90px 0;
+            text-align: center;
+            border-radius: 8px;
+        }
+
+        /* Navbar with a muted teal background */
+        .navbar {
+            background-color: #4b8c6e;
+        }
+
+        .navbar-nav .nav-link {
+            color: white !important;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #c1e1c1 !important;
+        }
+
+        /* Card with a soft light gray background */
+        .card-bg {
+            background: #f0f4f7;
+            color: #333;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .card-title {
+            color: #006f6a;
+        }
+
+        .card-text {
+            color: #444;
+        }
+
+        /* Custom button with subtle teal color */
+        .btn-custom {
+            background-color: #006f6a;
+            color: white;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .btn-custom:hover {
+            background-color: #005147;
+        }
+
+        /* Calendar Section */
+        #calendar {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Footer with dark teal background */
+        footer {
+            background-color: #004c8c;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* General padding for sections */
+        .section-padding {
+            padding: 60px 0;
+        }
+
+        /* Styling for section titles */
+        .section-header {
+            color: #006f6a;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .section-description {
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        /* Card shadow effect */
+        .card {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Title Section with gradient background -->
+        <header class="header-section">
+            <h1>Welcome to the College Event Management System</h1>
+            <p class="lead">Streamlining event creation, registration, and management.</p>
+        </header>
+
+        <!-- Navigation Bar -->
+        <nav class="navbar navbar-expand-lg navbar-light mb-4">
+            <ul class="navbar-nav mx-auto">
+                {% if current_user.is_authenticated %}
+                    {% if current_user.role == 'admin' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('main.create_event') }}">Create Event</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('main.admin') }}">Admin Dashboard</a>
+                        </li>
+                    {% endif %}
+                    
+                    {% if current_user.role == 'faculty' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('main.message_admin') }}">Message Admin</a>
+                        </li>
+                    {% endif %}
+                    
+
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.view_events') }}">View Events</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.calendar') }}">Calendar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.logout') }}">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.login') }}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.register') }}">Register</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+
+        <!-- Main Content Section -->
+        <div class="section-padding">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card card-bg text-dark">
+                        <div class="card-body">
+                            <h5 class="card-title">Upcoming Events</h5>
+                            <p class="card-text">Stay updated with the latest events happening at the college.</p>
+                            <a href="{{ url_for('main.view_events') }}" class="btn btn-custom">View Events</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card card-bg text-dark">
+                        <div class="card-body">
+                            <h5 class="card-title">Create Event</h5>
+                            <p class="card-text">Creating and managing college events can be done by admin only .</p>
+                            <a href="{{ url_for('main.create_event') }}" class="btn btn-custom">Create Now</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card card-bg text-dark">
+                        <div class="card-body">
+                            <h5 class="card-title">Calendar</h5>
+                            <p class="card-text">Check all events in a calendar view for a quick overview.</p>
+                            <a href="{{ url_for('main.calendar') }}" class="btn btn-custom">Go to Calendar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar Section -->
+        <div id="calendar" class="mt-5"></div>
+
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2024 College Event Management System | All Rights Reserved</p>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!-- FullCalendar JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+    <!-- Calendar Initialization Script -->
+    <script>
+    $(document).ready(function() {
+        $('#calendar').fullCalendar({
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+            events: [
+                {% for event in events %}
+                {
+                    title: '{{ event.title | e }}',
+                    start: '{{ event.date.isoformat() }}',
+                    description: '{{ event.description | e }}'
+                },
+                {% endfor %}
+            ],
+            eventRender: function(event, element) {
+                element.attr('title', event.description);
+            },
+            defaultView: 'month',
+            locale: 'en',
+        });
+    });
+    </script>
+
+    <!-- Optional Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
